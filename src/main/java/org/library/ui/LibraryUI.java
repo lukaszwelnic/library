@@ -27,8 +27,14 @@ public class LibraryUI {
             System.out.println("5. Exit");
             System.out.print("Enter choice: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            String choiceInput = scanner.nextLine();
+            int choice;
+            try {
+                choice = Integer.parseInt(choiceInput);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a valid number.");
+                continue;
+            }
 
             try {
                 switch (choice) {

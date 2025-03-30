@@ -24,3 +24,10 @@ test {
 application {
     mainClass = 'org.library.LibraryApp'
 }
+
+// Ensure proper input/output is handled for interactive CLI
+run {
+    standardInput = System.in
+    standardOutput = System.out
+    errorOutput = System.err
+}
