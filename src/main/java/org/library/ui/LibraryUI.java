@@ -20,13 +20,13 @@ public class LibraryUI {
     public void start() {
         while (true) {
             System.out.println("\nLibrary Menu:");
-            System.out.println("1. Display books");
-            System.out.println("2. Add book");
+            System.out.println("1. Display book list");
+            System.out.println("2. Create new book");
             System.out.println("3. Edit book");
             System.out.println("4. Delete book");
             System.out.println("5. Exit");
 
-            int choice = getInputInt("Enter choice: ");
+            int choice = getInputInt("\nEnter choice: ");
             try {
                 switch (choice) {
                     case 1 -> displayBooks();
