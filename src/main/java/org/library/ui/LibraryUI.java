@@ -66,14 +66,14 @@ public class LibraryUI {
                     .max()
                     .orElse(0) + 1; // Auto-increment ID
 
-            String title = getInputString("Enter new title: ");
+            String title = getInputString("\nEnter new title: ");
             String author = getInputString("Enter new author: ");
             String description = getInputString("Enter new description: ");
 
             Book book = new Book(newId, title, author, description);
             bookService.addBook(book);
 
-            System.out.printf("✅  Book added successfully: ID: %d, Title: %s, Author: %s, Description: %s\n",
+            System.out.printf("\n✅  Book added successfully: ID: %d, Title: %s, Author: %s, Description: %s\n",
                     book.getId(), book.getTitle(), book.getAuthor(), book.getDescription());
         } catch (IllegalArgumentException e) {
             System.err.printf("\n❌  Failed to add a book\n%s\n", e.getMessage());
@@ -94,7 +94,7 @@ public class LibraryUI {
             bookToEdit.setDescription(getInputString("Enter updated description: "));
 
             bookService.updateBook(id, bookToEdit);
-            System.out.printf("✅  Book updated successfully: ID: %d, Title: %s, Author: %s, Description: %s\n",
+            System.out.printf("\n✅  Book updated successfully: ID: %d, Title: %s, Author: %s, Description: %s\n",
                     bookToEdit.getId(), bookToEdit.getTitle(), bookToEdit.getAuthor(), bookToEdit.getDescription());
         } catch (IllegalArgumentException e) {
             System.err.printf("\n❌  Failed to update book with ID %d\n%s\n", id, e.getMessage());
@@ -110,7 +110,7 @@ public class LibraryUI {
                     .orElseThrow(() -> new IllegalArgumentException("Book ID " + id + " not found."));
 
             bookService.deleteBook(id);
-            System.out.printf("✅  Book deleted successfully: ID: %d, Title: %s, Author: %s, Description: %s\n",
+            System.out.printf("\n✅  Book deleted successfully: ID: %d, Title: %s, Author: %s, Description: %s\n",
                     deletedBook.getId(), deletedBook.getTitle(), deletedBook.getAuthor(), deletedBook.getDescription());
         } catch (IllegalArgumentException e) {
             System.err.printf("\n❌  Failed to delete book with ID %d\n%s\n", id, e.getMessage());
