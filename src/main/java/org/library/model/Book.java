@@ -24,42 +24,18 @@ public class Book {
         this.description = description;
     }
 
-    // Getters and Setters
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public String getAuthor() { return author; }
+    public String getDescription() { return description; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public void setId(int id) { this.id = id; }
+    public void setTitle(String title) { this.title = title; }
+    public void setAuthor(String author) { this.author = author; }
+    public void setDescription(String description) { this.description = description; }
 
     @Override
     public String toString() {
-        return String.format("Book[id=%d, title='%s', author='%s', description='%s']", id, title, author, description);
+        return String.format("%-5d %-40s %-40s %s", id, title, author, description);
     }
-
 }

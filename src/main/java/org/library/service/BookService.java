@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -16,13 +17,13 @@ public class BookService {
     }
 
     public List<Book> getBooks() throws IOException {
-        return repository.loadBooks();
+        return List.copyOf(repository.loadBooks());
     }
 
     public void addBook(Book book) throws IOException {
         List<Book> books = repository.loadBooks();
         if (books.stream().anyMatch(b -> b.getId() == book.getId())) {
-            throw new IllegalArgumentException("❌ A book with ID " + book.getId() + " already exists.");
+            throw new IllegalArgumentException("❌  Book ID " + book.getId() + " already exists.");
         }
         books.add(book);
         repository.saveBooks(books);
@@ -30,9 +31,10 @@ public class BookService {
 
     public void updateBook(int id, Book updatedBook) throws IOException {
         List<Book> books = repository.loadBooks();
-        boolean bookExists = books.stream().anyMatch(book -> book.getId() == id);
-        if (!bookExists) {
-            throw new IllegalArgumentException("❌ Cannot update. Book with ID " + id + " not found.");
+        Optional<Book> bookOptional = books.stream().filter(b -> b.getId() == id).findFirst();
+
+        if (bookOptional.isEmpty()) {
+            throw new IllegalArgumentException("❌  Cannot update. Book ID " + id + " not found.");
         }
         books.replaceAll(book -> book.getId() == id ? updatedBook : book);
         repository.saveBooks(books);
@@ -40,11 +42,10 @@ public class BookService {
 
     public void deleteBook(int id) throws IOException {
         List<Book> books = repository.loadBooks();
-        boolean removed = books.removeIf(book -> book.getId() == id);
-        if (!removed) {
-            throw new IllegalArgumentException("❌ Cannot delete. Book with ID " + id + " not found.");
+        if (books.removeIf(book -> book.getId() == id)) {
+            repository.saveBooks(books);
+        } else {
+            throw new IllegalArgumentException("❌  Cannot delete. Book ID " + id + " not found.");
         }
-        repository.saveBooks(books);
     }
-
 }

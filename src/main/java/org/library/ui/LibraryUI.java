@@ -20,26 +20,17 @@ public class LibraryUI {
     public void start() {
         while (true) {
             System.out.println("\nLibrary Menu:");
-            System.out.println("1. Display book list");
-            System.out.println("2. Create new book");
+            System.out.println("1. Display books");
+            System.out.println("2. Add book");
             System.out.println("3. Edit book");
             System.out.println("4. Delete book");
             System.out.println("5. Exit");
-            System.out.print("Enter choice: ");
 
-            String choiceInput = scanner.nextLine();
-            int choice;
-            try {
-                choice = Integer.parseInt(choiceInput);
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input! Please enter a valid number.");
-                continue;
-            }
-
+            int choice = getInputInt("Enter choice: ");
             try {
                 switch (choice) {
                     case 1 -> displayBooks();
-                    case 2 -> createBook();
+                    case 2 -> addBook();
                     case 3 -> editBook();
                     case 4 -> deleteBook();
                     case 5 -> {
@@ -50,63 +41,95 @@ public class LibraryUI {
                     default -> System.out.println("Invalid choice!");
                 }
             } catch (IOException e) {
-                scanner.close();
                 System.err.println("Error: " + e.getMessage());
+                scanner.close();
             }
         }
     }
 
     private void displayBooks() throws IOException {
         List<Book> books = bookService.getBooks();
-        if (books.isEmpty()) {
-            System.out.println("No books available.");
-        } else {
-            books.forEach(book -> System.out.printf("%d - %s by %s%n", book.getId(), book.getTitle(), book.getAuthor()));
+        if (books.isEmpty()){
+            System.out.print("\n❌  Library is empty. Add books first!\n");
+        } else{
+            System.out.printf("\n%-5s %-40s %-40s %s\n\n", "ID", "Title", "Author", "Description");
+            books.forEach(System.out::println);
+            System.out.printf("\n✅  Displayed %d books\n", books.size());
         }
     }
 
-    private void createBook() throws IOException {
-        System.out.print("Enter book id: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+    private void addBook() throws IOException {
+        try {
+            List<Book> books = bookService.getBooks();
+            int newId = books.stream()
+                    .mapToInt(Book::getId)
+                    .max()
+                    .orElse(0) + 1; // Auto-increment ID
 
-        System.out.print("Enter title: ");
-        String title = scanner.nextLine();
+            String title = getInputString("Enter new title: ");
+            String author = getInputString("Enter new author: ");
+            String description = getInputString("Enter new description: ");
 
-        System.out.print("Enter author: ");
-        String author = scanner.nextLine();
+            Book book = new Book(newId, title, author, description);
+            bookService.addBook(book);
 
-        System.out.print("Enter description: ");
-        String description = scanner.nextLine();
-
-        bookService.addBook(new Book(id, title, author, description));
-        System.out.println("Book added!");
+            System.out.printf("✅  Book added successfully: ID: %d, Title: %s, Author: %s, Description: %s\n",
+                    book.getId(), book.getTitle(), book.getAuthor(), book.getDescription());
+        } catch (IllegalArgumentException e) {
+            System.err.printf("\n❌  Failed to add a book\n%s\n", e.getMessage());
+        }
     }
 
     private void editBook() throws IOException {
-        System.out.print("Enter book id to edit: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+        int id = getInputInt("\nEnter book ID to edit: ");
+        try {
+            List<Book> books = bookService.getBooks();
+            Book bookToEdit = books.stream()
+                    .filter(b -> b.getId() == id)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Book ID " + id + " not found."));
 
-        System.out.print("Enter new title: ");
-        String title = scanner.nextLine();
+            bookToEdit.setTitle(getInputString("Enter updated title: "));
+            bookToEdit.setAuthor(getInputString("Enter updated author: "));
+            bookToEdit.setDescription(getInputString("Enter updated description: "));
 
-        System.out.print("Enter new author: ");
-        String author = scanner.nextLine();
-
-        System.out.print("Enter new description: ");
-        String description = scanner.nextLine();
-
-        bookService.updateBook(id, new Book(id, title, author, description));
-        System.out.println("Book updated!");
+            bookService.updateBook(id, bookToEdit);
+            System.out.printf("✅  Book updated successfully: ID: %d, Title: %s, Author: %s, Description: %s\n",
+                    bookToEdit.getId(), bookToEdit.getTitle(), bookToEdit.getAuthor(), bookToEdit.getDescription());
+        } catch (IllegalArgumentException e) {
+            System.err.printf("\n❌  Failed to update book with ID %d\n%s\n", id, e.getMessage());
+        }
     }
 
     private void deleteBook() throws IOException {
-        System.out.print("Enter book id to delete: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+        int id = getInputInt("\nEnter book ID to delete: ");
+        try {
+            Book deletedBook = bookService.getBooks().stream()
+                    .filter(book -> book.getId() == id)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Book ID " + id + " not found."));
 
-        bookService.deleteBook(id);
-        System.out.println("Book deleted!");
+            bookService.deleteBook(id);
+            System.out.printf("✅  Book deleted successfully: ID: %d, Title: %s, Author: %s, Description: %s\n",
+                    deletedBook.getId(), deletedBook.getTitle(), deletedBook.getAuthor(), deletedBook.getDescription());
+        } catch (IllegalArgumentException e) {
+            System.err.printf("\n❌  Failed to delete book with ID %d\n%s\n", id, e.getMessage());
+        }
+    }
+
+    private int getInputInt(String prompt) {
+        System.out.print(prompt);
+        while (!scanner.hasNextInt()) {
+            System.out.print("Invalid input! Enter a number: ");
+            scanner.next();
+        }
+        int input = scanner.nextInt();
+        scanner.nextLine();
+        return input;
+    }
+
+    private String getInputString(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine();
     }
 }
