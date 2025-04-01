@@ -30,7 +30,7 @@ public class LibraryUI {
             try {
                 switch (choice) {
                     case 1 -> displayBooks();
-                    case 2 -> addBook();
+                    case 2 -> createBook();
                     case 3 -> editBook();
                     case 4 -> deleteBook();
                     case 5 -> {
@@ -48,7 +48,7 @@ public class LibraryUI {
     }
 
     private void displayBooks() throws IOException {
-        List<Book> books = bookService.getBooks();
+        List<Book> books = bookService.fetchAllBooks();
         if (books.isEmpty()){
             System.out.print("\n❌  Library is empty. Add books first!\n");
         } else{
@@ -58,9 +58,9 @@ public class LibraryUI {
         }
     }
 
-    private void addBook() throws IOException {
+    private void createBook() throws IOException {
         try {
-            List<Book> books = bookService.getBooks();
+            List<Book> books = bookService.fetchAllBooks();
             int newId = books.stream()
                     .mapToInt(Book::getId)
                     .max()
@@ -71,7 +71,7 @@ public class LibraryUI {
             String description = getInputString("Enter new description: ");
 
             Book book = new Book(newId, title, author, description);
-            bookService.addBook(book);
+            bookService.addNewBook(book);
 
             System.out.printf("\n✅  Book added successfully: ID: %d, Title: %s, Author: %s, Description: %s\n",
                     book.getId(), book.getTitle(), book.getAuthor(), book.getDescription());
@@ -83,7 +83,7 @@ public class LibraryUI {
     private void editBook() throws IOException {
         int id = getInputInt("\nEnter book ID to edit: ");
         try {
-            List<Book> books = bookService.getBooks();
+            List<Book> books = bookService.fetchAllBooks();
             Book bookToEdit = books.stream()
                     .filter(b -> b.getId() == id)
                     .findFirst()
@@ -93,7 +93,7 @@ public class LibraryUI {
             bookToEdit.setAuthor(getInputString("Enter updated author: "));
             bookToEdit.setDescription(getInputString("Enter updated description: "));
 
-            bookService.updateBook(id, bookToEdit);
+            bookService.modifyBookById(id, bookToEdit);
             System.out.printf("\n✅  Book updated successfully: ID: %d, Title: %s, Author: %s, Description: %s\n",
                     bookToEdit.getId(), bookToEdit.getTitle(), bookToEdit.getAuthor(), bookToEdit.getDescription());
         } catch (IllegalArgumentException e) {
@@ -104,12 +104,12 @@ public class LibraryUI {
     private void deleteBook() throws IOException {
         int id = getInputInt("\nEnter book ID to delete: ");
         try {
-            Book deletedBook = bookService.getBooks().stream()
+            Book deletedBook = bookService.fetchAllBooks().stream()
                     .filter(book -> book.getId() == id)
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("Book ID " + id + " not found."));
 
-            bookService.deleteBook(id);
+            bookService.removeBookById(id);
             System.out.printf("\n✅  Book deleted successfully: ID: %d, Title: %s, Author: %s, Description: %s\n",
                     deletedBook.getId(), deletedBook.getTitle(), deletedBook.getAuthor(), deletedBook.getDescription());
         } catch (IllegalArgumentException e) {

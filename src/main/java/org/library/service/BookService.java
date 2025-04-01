@@ -16,11 +16,11 @@ public class BookService {
         this.repository = repository;
     }
 
-    public List<Book> getBooks() throws IOException {
+    public List<Book> fetchAllBooks() throws IOException {
         return List.copyOf(repository.loadBooks());
     }
 
-    public void addBook(Book book) throws IOException {
+    public void addNewBook(Book book) throws IOException {
         List<Book> books = repository.loadBooks();
         if (books.stream().anyMatch(b -> b.getId() == book.getId())) {
             throw new IllegalArgumentException("❌  Book ID " + book.getId() + " already exists.");
@@ -29,7 +29,7 @@ public class BookService {
         repository.saveBooks(books);
     }
 
-    public void updateBook(int id, Book updatedBook) throws IOException {
+    public void modifyBookById(int id, Book updatedBook) throws IOException {
         List<Book> books = repository.loadBooks();
         Optional<Book> bookOptional = books.stream().filter(b -> b.getId() == id).findFirst();
 
@@ -40,7 +40,7 @@ public class BookService {
         repository.saveBooks(books);
     }
 
-    public void deleteBook(int id) throws IOException {
+    public void removeBookById(int id) throws IOException {
         List<Book> books = repository.loadBooks();
         if (books.removeIf(book -> book.getId() == id)) {
             repository.saveBooks(books);
