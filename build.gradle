@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework:spring-context:6.2.5'
+    implementation 'org.springframework:spring-aop:6.2.5'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.18.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
