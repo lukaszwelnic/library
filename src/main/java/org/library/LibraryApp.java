@@ -18,7 +18,7 @@ public class LibraryApp {
         System.out.println("2. Polski");
         System.out.print("> ");
 
-        int choice = scanner.nextInt();
+        int choice = scanner.hasNextInt() ? scanner.nextInt() : 0;
         scanner.nextLine();
 
         Locale locale = switch (choice) {
@@ -31,6 +31,8 @@ public class LibraryApp {
 
         MessageService messageService = context.getBean(MessageService.class);
         messageService.setLocale(locale);
+
+        System.out.println("Locale set to: " + locale.getDisplayLanguage());
 
         ui.start();
 
