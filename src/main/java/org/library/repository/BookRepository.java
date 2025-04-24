@@ -3,6 +3,7 @@ package org.library.repository;
 import com.fasterxml.jackson.databind.SequenceWriter;
 import org.library.mapper.BookMapper;
 import org.library.model.Book;
+import org.library.service.MessageService;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
@@ -14,9 +15,11 @@ import java.util.List;
 public class BookRepository {
     private static final String FILE_PATH = "src/main/resources/books.csv";
     private final BookMapper bookMapper;
+    private final MessageService messageService;
 
-    public BookRepository(BookMapper bookMapper) {
+    public BookRepository(BookMapper bookMapper, MessageService messageService) {
         this.bookMapper = bookMapper;
+        this.messageService = messageService;
     }
 
     public List<Book> loadBooks() throws IOException {
@@ -29,7 +32,7 @@ public class BookRepository {
         try {
             return bookMapper.map(file);
         } catch (IOException e) { // Catch exception from BookMapper
-            throw new IOException("❌  Error loading books from file: " + FILE_PATH, e);
+            throw new IOException("❌  " + messageService.get("error.loading.books", FILE_PATH), e);
         }
     }
 
@@ -38,7 +41,7 @@ public class BookRepository {
         try (SequenceWriter writer = bookMapper.map(books).writeValues(file)) {
             writer.writeAll(books);
         } catch (IOException e) {
-            throw new IOException("❌  Error saving books to file: " + FILE_PATH, e);
+            throw new IOException("❌  " + messageService.get("error.saving.books", FILE_PATH), e);
         }
     }
 }

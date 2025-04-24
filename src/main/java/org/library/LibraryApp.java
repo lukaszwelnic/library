@@ -3,6 +3,7 @@ package org.library;
 import java.util.Locale;
 import java.util.Scanner;
 import org.library.config.AppConfig;
+import org.library.service.MessageService;
 import org.library.ui.LibraryUI;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -21,11 +22,17 @@ public class LibraryApp {
         scanner.nextLine();
 
         Locale locale = switch (choice) {
+            case 1 -> new Locale("en");
             case 2 -> new Locale("pl");
             default -> Locale.ENGLISH;
         };
 
         LibraryUI ui = context.getBean(LibraryUI.class);
-        ui.start(locale);
+
+        MessageService messageService = context.getBean(MessageService.class);
+        messageService.setLocale(locale);
+
+        ui.start();
+
     }
 }

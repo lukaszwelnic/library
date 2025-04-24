@@ -10,7 +10,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 @Configuration
-@EnableAspectJAutoProxy
+//@EnableAspectJAutoProxy
 @ComponentScan(basePackages = "org.library")
 public class AppConfig {
     @Bean
@@ -30,6 +30,7 @@ public class AppConfig {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("messages");
         messageSource.setDefaultEncoding("UTF-8");
+        messageSource.setFallbackToSystemLocale(false);
         return messageSource;
     }
 
