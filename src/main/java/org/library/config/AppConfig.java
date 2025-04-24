@@ -10,7 +10,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 @Configuration
-//@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy
 @ComponentScan(basePackages = "org.library")
 public class AppConfig {
     @Bean
