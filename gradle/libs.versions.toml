@@ -1,0 +1,11 @@
+[versions]
+aspectj = "1.9.23"
+spring = "6.2.5"
+jackson = "2.18.2"
+junit = "5.11.4"
+
+[libraries]
+aspectjweaver = { group = "org.aspectj", name = "aspectjweaver", version.ref = "aspectj" }
+spring-context = { group = "org.springframework", name = "spring-context", version.ref = "spring" }
+jackson-csv = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-csv", version.ref = "jackson" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
