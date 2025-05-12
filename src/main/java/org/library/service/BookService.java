@@ -24,7 +24,8 @@ public class BookService {
 
     public void addNewBook(Book book) throws IOException {
         List<Book> books = repository.loadBooks();
-        if (books.stream().anyMatch(b -> b.getId() == book.getId())) {
+        boolean bookExists = books.stream().anyMatch(b -> b.getId() == book.getId());
+        if (bookExists) {
             throw new IllegalArgumentException("❌  " + messageService.get("error.duplicate.id", book.getId()));
         }
         books.add(book);

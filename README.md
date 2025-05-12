@@ -1,66 +1,72 @@
 # Library CRUD Console Application
 
-A simple **Library CRUD console application** for storing book information using **CSV files**. The project implements basic CRUD operations (Create, Read, Update, Delete) to manage books, and utilizes **Spring** for dependency injection and **Jackson CSV Mapper** for interacting with CSV data.
+A modular **Library CRUD console application** for managing book data, currently supporting both **CSV file** and **PostgreSQL** storage. The application is designed using **Spring (Context only)** for dependency injection, and includes configurable AOP features like **logging** and **caching**.
 
 ## Features
-- **Display Book List**: View all books stored in the CSV file.
-- **Create New Book**: Add a new book entry.
-- **Edit Existing Book**: Update the details of an existing book.
-- **Delete Book**: Remove a book from the collection.
-- **Persistent Data**: Books are saved to and loaded from a CSV file.
-- **Command-line Interface**: Simple text-based user interface for interaction.
 
-## Technologies
+- **Display Book List**: View all stored books.
+- **Create New Book**: Add a new book.
+- **Edit Existing Book**: Update details of a book by ID.
+- **Delete Book**: Remove a book by ID.
+- **Persistent Storage Options**:
+  - **CSV**: Read/write to a local CSV file.
+  - **PostgreSQL**: Query a database using Spring JDBC (optional).
+- **Profile-based Configuration**:
+  - Easily switch between CSV or JDBC storage using Spring profiles.
+  - Enable or disable logging and caching aspects.
+
+## Technologies Used
+
 - **Java**: Core programming language.
-- **Spring**: Dependency injection and application context management (using `spring-context`).
-- **Jackson CSV Mapper**: For reading and writing books to CSV files.
-- **Gradle**: Build tool for project management.
+- **Spring Context**: Dependency injection and configuration management.
+- **Jackson CSV Mapper**: CSV serialization and deserialization.
+- **Spring JDBC** (optional): For PostgreSQL integration.
+- **AspectJ**: For AOP logging and caching.
+- **Gradle**: Project build and dependency management.
 
 ## Setup and Installation
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/lukaszwelnic/library.git
-   cd library
-   ```
+### 1. Clone the Repository
 
-2. **Install Dependencies**
-   If you have Gradle installed, run the following command to download and install the dependencies:
-   ```bash
-   ./gradlew clean build
-   ```
+```bash
+git clone https://github.com/lukaszwelnic/library.git
+cd library
+````
 
-3. **Run the Application**
-   You can run the application using:
-   ```bash
-   ./gradlew run
-   ```
+### 2. Build the Project
+
+```bash
+./gradlew clean build
+```
+
+### 3. Configure Active Profiles
+
+Edit `src/main/resources/application.properties` to choose the desired profiles:
+
+```properties
+# Example
+spring.profiles.active=logging,caching,csv
+# or to use PostgreSQL instead of CSV
+spring.profiles.active=logging,caching,jdbc
+```
+
+### 4. (Optional) Set up PostgreSQL
+
+* Create a new database.
+* Run the SQL initialization script in `src/main/resources/schema.sql` to create tables.
+
+### 5. Run the Application
+
+```bash
+./gradlew run
+```
+
+---
 
 ## Usage
 
-1. Once the program starts, you'll see a simple menu with 5 options:
-    - **1**: Display book list
-    - **2**: Create new book
-    - **3**: Edit book
-    - **4**: Delete book
-    - **5**: Exit the application
+You’ll be presented with a menu of options:
 
-2. **Displaying Books**:  
-   Choose option `1` to display all books in the library.
-
-3. **Creating a New Book**:  
-   Choose option `2` to create a new book. You will be prompted to enter the book's `ID`, `Title`, `Author`, and `Description`.
-
-4. **Editing a Book**:  
-   Choose option `3` to edit an existing book. You will be prompted to enter the `ID` of the book you want to update, followed by new values for the `Title`, `Author`, and `Description`.
-
-5. **Deleting a Book**:  
-   Choose option `4` to delete a book. You will be prompted to enter the `ID` of the book to delete.
-
-6. **Exit**:  
-   Choose option `5` to exit the application.
-
-### Example:
 ```
 Library Menu:
 1. Display book list
@@ -68,14 +74,27 @@ Library Menu:
 3. Edit book
 4. Delete book
 5. Exit
-Enter choice: 1
+Enter choice: 
 ```
 
-### Key Classes:
-- **`Book.java`**: Defines the properties of a book (ID, Title, Author, Description).
-- **`BookRepository.java`**: Manages the reading and writing of book data to the CSV file.
-- **`BookService.java`**: Contains the CRUD logic for managing books.
-- **`LibraryUI.java`**: Handles the user interface, including displaying the menu and capturing user input.
+---
+
+## Architecture Overview
+
+### Repository Interface
+
+* `BookRepository`: Common interface for all storage types.
+* `CsvBookRepository`: CSV file implementation.
+* `JdbcBookRepository`: PostgreSQL JDBC implementation.
+
+### AOP Support
+
+* `LoggingAspect`: Logs method calls (enabled with `logging` profile).
+* `CachingAspect`: Caches method results (enabled with `caching` profile).
+
+Use Spring profiles to toggle behavior.
+
+---
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
