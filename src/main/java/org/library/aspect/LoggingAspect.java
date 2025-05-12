@@ -2,12 +2,14 @@ package org.library.aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
 @Aspect
 @Component
+@Profile("logging")
 public class LoggingAspect {
 
     @Before("execution(* org.library.service.*.*(..))")

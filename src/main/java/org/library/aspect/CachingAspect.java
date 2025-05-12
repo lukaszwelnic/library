@@ -3,6 +3,7 @@ package org.library.aspect;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 @Aspect
 @Component
+@Profile("caching")
 public class CachingAspect {
 
     private final Map<String, Object> cache = new HashMap<>();

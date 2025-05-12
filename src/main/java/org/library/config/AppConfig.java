@@ -3,15 +3,13 @@ package org.library.config;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 @Configuration
 @EnableAspectJAutoProxy
 @ComponentScan(basePackages = "org.library")
+@PropertySource("classpath:application.properties")
 public class AppConfig {
     @Bean
     public CsvSchema csvSchema() {
