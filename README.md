@@ -8,6 +8,7 @@ A modular **Library CRUD console application** for managing book data, currently
 - **Create New Book**: Add a new book.
 - **Edit Existing Book**: Update details of a book by ID.
 - **Delete Book**: Remove a book by ID.
+- **Command-line Interface**: Simple text-based user interface for interaction.
 - **Persistent Storage Options**:
   - **CSV**: Read/write to a local CSV file.
   - **PostgreSQL**: Query a database using Spring JDBC (optional).
@@ -43,7 +44,7 @@ cd library
 
 Edit `src/main/resources/application.properties` to choose the desired profiles:
 
-```properties
+```
 # Example
 spring.profiles.active=logging,caching,csv
 # or to use PostgreSQL instead of CSV

@@ -1,18 +1,18 @@
-package org.library.repository;
+package org.library.repository.csv;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.library.model.Book;
+import org.library.repository.BookRepository;
 import org.library.service.MessageService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Repository
 @Profile("csv")
@@ -30,7 +30,7 @@ public class CsvBookRepository implements BookRepository {
     }
 
     @Override
-    public List<Book> loadBooks() throws IOException {
+    public List<Book> read() throws IOException {
         File file = new File(FILE_PATH);
 
         if (!file.exists()) {
@@ -47,7 +47,7 @@ public class CsvBookRepository implements BookRepository {
     }
 
     @Override
-    public void saveBooks(List<Book> books) throws IOException {
+    public void create(List<Book> books) throws IOException {
         File file = new File(FILE_PATH);
         ObjectWriter writer = csvMapper.writerFor(Book.class).with(csvSchema);
 
@@ -56,5 +56,34 @@ public class CsvBookRepository implements BookRepository {
         } catch (IOException e) {
             throw new IOException("❌  " + messageService.get("error.saving.books", FILE_PATH), e);
         }
+    }
+
+    @Override
+    public void update(List<Book> books) throws IOException {
+        File file = new File(FILE_PATH);
+        ObjectWriter writer = csvMapper.writerFor(Book.class).with(csvSchema);
+
+        try (var sequenceWriter = writer.writeValues(file)) {
+            sequenceWriter.writeAll(books);
+        } catch (IOException e) {
+            throw new IOException("❌  " + messageService.get("error.saving.books", FILE_PATH), e);
+        }
+    }
+
+    @Override
+    public void delete(List<Book> books) throws IOException {
+        File file = new File(FILE_PATH);
+        ObjectWriter writer = csvMapper.writerFor(Book.class).with(csvSchema);
+
+        try (var sequenceWriter = writer.writeValues(file)) {
+            sequenceWriter.writeAll(books);
+        } catch (IOException e) {
+            throw new IOException("❌  " + messageService.get("error.saving.books", FILE_PATH), e);
+        }
+    }
+
+    @Override
+    public Optional<Book> findById(int id) throws IOException {
+        return read().stream().filter(b -> b.getId() == id).findFirst();
     }
 }

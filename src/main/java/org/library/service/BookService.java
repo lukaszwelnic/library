@@ -19,34 +19,34 @@ public class BookService {
     }
 
     public List<Book> fetchAllBooks() throws IOException {
-        return List.copyOf(repository.loadBooks());
+        return List.copyOf(repository.read());
     }
 
     public void addNewBook(Book book) throws IOException {
-        List<Book> books = repository.loadBooks();
+        List<Book> books = repository.read();
         boolean bookExists = books.stream().anyMatch(b -> b.getId() == book.getId());
         if (bookExists) {
             throw new IllegalArgumentException("❌  " + messageService.get("error.duplicate.id", book.getId()));
         }
         books.add(book);
-        repository.saveBooks(books);
+        repository.create(books);
     }
 
     public void modifyBookById(int id, Book updatedBook) throws IOException {
-        List<Book> books = repository.loadBooks();
+        List<Book> books = repository.read();
         Optional<Book> bookOptional = books.stream().filter(b -> b.getId() == id).findFirst();
 
         if (bookOptional.isEmpty()) {
             throw new IllegalArgumentException("❌  " + messageService.get("error.update.notfound", id));
         }
         books.replaceAll(book -> book.getId() == id ? updatedBook : book);
-        repository.saveBooks(books);
+        repository.update(books);
     }
 
     public void removeBookById(int id) throws IOException {
-        List<Book> books = repository.loadBooks();
+        List<Book> books = repository.read();
         if (books.removeIf(book -> book.getId() == id)) {
-            repository.saveBooks(books);
+            repository.delete(books);
         } else {
             throw new IllegalArgumentException("❌  " + messageService.get("error.delete.notfound", id));
         }
