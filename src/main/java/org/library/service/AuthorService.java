@@ -16,24 +16,23 @@ public class AuthorService {
         this.authorRepository = authorRepository;
     }
 
-    // CRUD Operations
-    public List<Author> fetchAllAuthors() {
-        return authorRepository.findAll();
+    public List<Author> findAll() {
+        return authorRepository.read();
     }
 
-    public Optional<Author> fetchAuthorById(int id) {
+    public Optional<Author> findById(int id) {
         return authorRepository.findById(id);
     }
 
-    public void createAuthor(Author author) {
-        authorRepository.addAuthor(author);
+    public void addAuthor(Author author) {
+        authorRepository.create(author);
     }
 
-    public void updateAuthor(int id, Author author) {
-        authorRepository.updateAuthor(id, author);
+    public void updateAuthor(Author author) {
+        authorRepository.update(author);
     }
 
     public void deleteAuthor(int id) {
-        authorRepository.deleteAuthor(id);
+        authorRepository.delete(id);
     }
 }

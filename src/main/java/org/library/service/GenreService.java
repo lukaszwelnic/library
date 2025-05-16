@@ -16,24 +16,23 @@ public class GenreService {
         this.genreRepository = genreRepository;
     }
 
-    // CRUD Operations
-    public List<Genre> fetchAllGenres() {
-        return genreRepository.findAll();
+    public List<Genre> findAll() {
+        return genreRepository.read();
     }
 
-    public Optional<Genre> fetchGenreById(int id) {
+    public Optional<Genre> findById(int id) {
         return genreRepository.findById(id);
     }
 
-    public void createGenre(Genre genre) {
-        genreRepository.addGenre(genre);
+    public void addGenre(Genre genre) {
+        genreRepository.create(genre);
     }
 
-    public void updateGenre(int id, Genre genre) {
-        genreRepository.updateGenre(id, genre);
+    public void updateGenre(Genre genre) {
+        genreRepository.update(genre);
     }
 
     public void deleteGenre(int id) {
-        genreRepository.deleteGenre(id);
+        genreRepository.delete(id);
     }
 }

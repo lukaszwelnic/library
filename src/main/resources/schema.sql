@@ -1,17 +1,17 @@
 CREATE TABLE IF NOT EXISTS authors (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    name VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS genres (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    name VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS books (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    description TEXT,
     author_id INTEGER NOT NULL REFERENCES authors(id),
-    genre_id INTEGER NOT NULL REFERENCES genres(id)
+    genre_id INTEGER NOT NULL REFERENCES genres(id),
+    description TEXT
 );
