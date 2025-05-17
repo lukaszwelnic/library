@@ -1,7 +1,6 @@
 package org.library.repository;
 
 import org.library.model.Author;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 

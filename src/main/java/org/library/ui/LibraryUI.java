@@ -10,7 +10,7 @@ import org.library.service.MessageService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Locale;
 import java.util.Scanner;
 
 @Component
@@ -26,6 +26,22 @@ public class LibraryUI {
         this.authorService = authorService;
         this.genreService = genreService;
         this.messageService = messageService;
+    }
+
+    public Locale chooseLocale() {
+        System.out.println("Choose language / Wybierz język:");
+        System.out.println("1. English");
+        System.out.println("2. Polski");
+        System.out.print("> ");
+
+        int choice = scanner.hasNextInt() ? scanner.nextInt() : 0;
+        scanner.nextLine(); // consume newline
+
+        return switch (choice) {
+            case 1 -> new Locale("en");
+            case 2 -> new Locale("pl");
+            default -> Locale.ENGLISH;
+        };
     }
 
     public void start() {

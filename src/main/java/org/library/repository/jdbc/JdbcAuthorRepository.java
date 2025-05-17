@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -34,7 +33,7 @@ public class JdbcAuthorRepository implements AuthorRepository {
 
     @Override
     public List<Author> read() {
-        String sql = "SELECT id, name FROM authors ORDER BY name";
+        String sql = "SELECT id, name FROM authors ORDER BY id";
         return jdbcTemplate.query(sql, authorRowMapper);
     }
 

@@ -12,6 +12,9 @@ import javax.sql.DataSource;
 @PropertySource("classpath:application.properties")
 public class JdbcConfig {
 
+    @Value("${spring.datasource.driver-class-name}")
+    private String driver;
+
     @Value("${spring.datasource.url}")
     private String url;
 
@@ -24,7 +27,7 @@ public class JdbcConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName("org.postgresql.Driver");
+        ds.setDriverClassName(driver);
         ds.setUrl(url);
         ds.setUsername(username);
         ds.setPassword(password);
