@@ -86,6 +86,8 @@ Enter choice:
 * Add 2 different messages with tick and X to messageService
 * Check for duplicate authors/genres
 * Validate input
+* Fix adding books
+* Allow user to add/update/delete new Genres and Authors
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
