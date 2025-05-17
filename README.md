@@ -2,8 +2,6 @@
 
 A modular **Library CRUD console application** for managing book data, currently supporting **PostgreSQL** storage. The application is designed using **Spring (Context only)** for dependency injection, and includes configurable AOP features like **logging** and **caching**.
 
----
-
 ## Features
 
 - **Display Book List**: View all stored books.
@@ -16,8 +14,6 @@ A modular **Library CRUD console application** for managing book data, currently
 - **Profile-based Configuration**:
   - Enable or disable logging and caching aspects.
 
----
-
 ## Technologies Used
 
 - **Java**: Core programming language.
@@ -25,8 +21,6 @@ A modular **Library CRUD console application** for managing book data, currently
 - **Spring JDBC**: For PostgreSQL integration.
 - **AspectJ**: For AOP logging and caching.
 - **Gradle**: Project build and dependency management.
-
----
 
 ## Setup and Installation
 
@@ -67,8 +61,6 @@ spring.profiles.active=logging,caching,jdbc
 ./gradlew run
 ```
 
----
-
 ## Usage
 
 You’ll be presented with a menu of options:
@@ -83,8 +75,6 @@ Library Menu:
 Enter choice: 
 ```
 
----
-
 ## TODO
 
 * Add CSV support
@@ -94,8 +84,6 @@ Enter choice:
 * Validate input
 * Fix adding books
 * Allow user to add/update/delete new Genres and Authors
-
----
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
