@@ -72,13 +72,13 @@ public class LibraryUI {
     private void displayBooks() {
         List<Book> books = bookService.fetchAllBooks();
         if (books.isEmpty()) {
-            System.out.println("\n❌  " + messageService.get("info.empty.library"));
+            System.out.println("\n" + messageService.get("info.empty.library"));
         } else {
             System.out.printf("\n%-5s %-60s %-40s %-40s %s\n\n",
                     messageService.get("book.id"), messageService.get("book.title"), messageService.get("book.author"),
                     messageService.get("book.genre"), messageService.get("book.description"));
             books.forEach(System.out::println);
-            System.out.println("\n✅  " + messageService.get("info.displayed.books", books.size()));
+            System.out.println("\n" + messageService.get("info.displayed.books", books.size()));
         }
     }
 
@@ -91,10 +91,10 @@ public class LibraryUI {
             Book book = new Book(null, title, author, genre, description);
             bookService.addNewBook(book);
 
-            System.out.println("\n✅  " + messageService.get("info.book.added",
+            System.out.println("\n" + messageService.get("info.book.added",
                     book.getId(), book.getTitle(), book.getAuthor(), book.getGenre(), book.getDescription()));
         } catch (IllegalArgumentException e) {
-            System.err.printf("\n❌  " + messageService.get("error.add.book") + "\n%s\n", e.getMessage());
+            System.err.printf("\n" + messageService.get("error.add.book") + "\n%s\n", e.getMessage());
         }
     }
 
@@ -130,10 +130,10 @@ public class LibraryUI {
             }
 
             bookService.modifyBookById(id, bookToEdit);
-            System.out.println("\n✅  " + messageService.get("info.book.updated",
+            System.out.println("\n" + messageService.get("info.book.updated",
                     bookToEdit.getId(), bookToEdit.getTitle(), bookToEdit.getAuthor().getName(), bookToEdit.getDescription()));
         } catch (IllegalArgumentException e) {
-            System.err.printf("\n❌  " + messageService.get("error.update.book") + " %d\n%s\n", id, e.getMessage());
+            System.err.printf("\n" + messageService.get("error.update.book") + " %d\n%s\n", id, e.getMessage());
         }
     }
 
@@ -146,17 +146,17 @@ public class LibraryUI {
                     .orElseThrow(() -> new IllegalArgumentException(messageService.get("error.book.not.found")));
 
             bookService.removeBookById(id);
-            System.out.println("\n✅  " + messageService.get("info.book.deleted",
+            System.out.println("\n" + messageService.get("info.book.deleted",
                     deletedBook.getId(), deletedBook.getTitle(), deletedBook.getAuthor().getName(), deletedBook.getDescription()));
         } catch (IllegalArgumentException e) {
-            System.err.printf("\n❌  " + messageService.get("error.delete.book") + " %d\n%s\n", id, e.getMessage());
+            System.err.printf("\n" + messageService.get("error.delete.book") + " %d\n%s\n", id, e.getMessage());
         }
     }
 
     private void displayAuthors() {
         List<Author> authors = authorService.findAll();
         if (authors.isEmpty()) {
-            System.out.println("\n❌  " + messageService.get("info.empty.authors"));
+            System.out.println("\n" + messageService.get("info.empty.authors"));
         } else {
             System.out.println("\n" + messageService.get("author.list.header"));
             authors.forEach(author -> System.out.println(author.getId() + ": " + author.getName()));
@@ -166,7 +166,7 @@ public class LibraryUI {
     private void displayGenres() {
         List<Genre> genres = genreService.findAll();
         if (genres.isEmpty()) {
-            System.out.println("\n❌  " + messageService.get("info.empty.genres"));
+            System.out.println("\n" + messageService.get("info.empty.genres"));
         } else {
             System.out.println("\n" + messageService.get("genre.list.header"));
             genres.forEach(genre -> System.out.println(genre.getId() + ": " + genre.getName()));

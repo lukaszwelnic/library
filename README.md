@@ -79,10 +79,9 @@ Enter choice:
 
 * Add CSV support
 * Add exceptions and exception handling
-* Add 2 different messages with tick and X to messageService
+* Add different messages with tick and x to messageService
 * Check for duplicate authors/genres
 * Validate input
-* Fix adding books
 * Allow user to add/update/delete new Genres and Authors
 
 ## License
