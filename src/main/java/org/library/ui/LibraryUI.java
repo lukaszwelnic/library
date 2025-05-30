@@ -84,20 +84,15 @@ public class LibraryUI {
 
     private void createBook() {
         try {
-            int newID = bookService.fetchAllBooks().stream()
-                    .mapToInt(Book::getId)
-                    .max()
-                    .orElse(0) + 1;
-
             String title = getInputString(messageService.get("prompt.new.title"));
             Author author = promptForAuthor();
             Genre genre = promptForGenre();
             String description = getInputString(messageService.get("prompt.new.description"));
-            Book book = new Book(newID, title, author, genre, description);
+            Book book = new Book(null, title, author, genre, description);
             bookService.addNewBook(book);
 
             System.out.println("\n✅  " + messageService.get("info.book.added",
-                    book.getId(), book.getTitle(), book.getAuthor(), book.getDescription()));
+                    book.getId(), book.getTitle(), book.getAuthor(), book.getGenre(), book.getDescription()));
         } catch (IllegalArgumentException e) {
             System.err.printf("\n❌  " + messageService.get("error.add.book") + "\n%s\n", e.getMessage());
         }

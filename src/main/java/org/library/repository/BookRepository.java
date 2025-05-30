@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface BookRepository {
     List<Book> read();
-    void create(Book book);
+    Book create(Book book);
     void update(int id, Book book);
     void delete(int id);
     Optional<Book> findById(int id);

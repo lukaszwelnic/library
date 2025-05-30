@@ -5,7 +5,6 @@ import org.library.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookService {
@@ -22,10 +21,6 @@ public class BookService {
     }
 
     public void addNewBook(Book book) {
-        Optional<Book> existing = repository.findById(book.getId());
-        if (existing.isPresent()) {
-            throw new IllegalArgumentException("❌  " + messageService.get("error.duplicate.id", book.getId()));
-        }
         repository.create(book);
     }
 

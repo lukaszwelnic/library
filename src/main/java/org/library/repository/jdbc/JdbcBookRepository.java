@@ -7,8 +7,11 @@ import org.library.repository.BookRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -60,13 +63,25 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     @Override
-    public void create(Book book) {
+    public Book create(Book book) {
         String sql = "INSERT INTO books (title, author_id, genre_id, description) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql,
-                book.getTitle(),
-                book.getAuthor().getId(),
-                book.getGenre().getId(),
-                book.getDescription());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, book.getTitle());
+            ps.setInt(2, book.getAuthor().getId());
+            ps.setInt(3, book.getGenre().getId());
+            ps.setString(4, book.getDescription());
+            return ps;
+        }, keyHolder);
+
+        Number key = keyHolder.getKey();
+        if (key != null) {
+            book.setId(key.intValue());
+        }
+
+        return book;
     }
 
     @Override
