@@ -1,23 +1,47 @@
 package org.library.ui;
 
 import org.library.model.Book;
+import org.library.model.Author;
+import org.library.model.Genre;
+import org.library.service.AuthorService;
 import org.library.service.BookService;
+import org.library.service.GenreService;
 import org.library.service.MessageService;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 @Component
 public class LibraryUI {
     private final BookService bookService;
+    private final AuthorService authorService;
+    private final GenreService genreService;
     private final MessageService messageService;
     private final Scanner scanner = new Scanner(System.in);
 
-    public LibraryUI(BookService bookService, MessageService messageService) {
+    public LibraryUI(BookService bookService, AuthorService authorService, GenreService genreService, MessageService messageService) {
         this.bookService = bookService;
+        this.authorService = authorService;
+        this.genreService = genreService;
         this.messageService = messageService;
+    }
+
+    public Locale chooseLocale() {
+        System.out.println("Choose language / Wybierz język:");
+        System.out.println("1. English");
+        System.out.println("2. Polski");
+        System.out.print("> ");
+
+        int choice = scanner.hasNextInt() ? scanner.nextInt() : 0;
+        scanner.nextLine(); // consume newline
+
+        return switch (choice) {
+            case 1 -> new Locale("en");
+            case 2 -> new Locale("pl");
+            default -> Locale.ENGLISH;
+        };
     }
 
     public void start() {
@@ -30,79 +54,90 @@ public class LibraryUI {
             System.out.println("5. " + messageService.get("menu.exit"));
 
             int choice = getInputInt("\n" + messageService.get("prompt.choice"));
-            try {
-                switch (choice) {
-                    case 1 -> displayBooks();
-                    case 2 -> createBook();
-                    case 3 -> editBook();
-                    case 4 -> deleteBook();
-                    case 5 -> {
-                        System.out.println(messageService.get("exit.message"));
-                        scanner.close();
-                        return;
-                    }
-                    default -> System.out.println(messageService.get("error.invalid.choice"));
+            switch (choice) {
+                case 1 -> displayBooks();
+                case 2 -> createBook();
+                case 3 -> editBook();
+                case 4 -> deleteBook();
+                case 5 -> {
+                    System.out.println(messageService.get("exit.message"));
+                    scanner.close();
+                    return;
                 }
-            } catch (IOException e) {
-                System.err.println(messageService.get("error.generic", e.getMessage()));
-                scanner.close();
+                default -> System.out.println(messageService.get("error.invalid.choice"));
             }
         }
     }
 
-    private void displayBooks() throws IOException {
+    private void displayBooks() {
         List<Book> books = bookService.fetchAllBooks();
         if (books.isEmpty()) {
-            System.out.println("\n❌  " + messageService.get("info.empty.library"));
+            System.out.println("\n" + messageService.get("info.empty.library"));
         } else {
-            System.out.printf("\n%-5s %-40s %-40s %s\n\n",
-                    messageService.get("book.id"), messageService.get("book.title"), messageService.get("book.author"), messageService.get("book.description"));
+            System.out.printf("\n%-5s %-60s %-40s %-40s %s\n\n",
+                    messageService.get("book.id"), messageService.get("book.title"), messageService.get("book.author"),
+                    messageService.get("book.genre"), messageService.get("book.description"));
             books.forEach(System.out::println);
-            System.out.println("\n✅  " + messageService.get("info.displayed.books", books.size()));
+            System.out.println("\n" + messageService.get("info.displayed.books", books.size()));
         }
     }
 
-    private void createBook() throws IOException {
+    private void createBook() {
         try {
-            List<Book> books = bookService.fetchAllBooks();
-            int newId = books.stream().mapToInt(Book::getId).max().orElse(0) + 1;
-
-            String title = getInputString("\n" + messageService.get("prompt.new.title"));
-            String author = getInputString(messageService.get("prompt.new.author"));
+            String title = getInputString(messageService.get("prompt.new.title"));
+            Author author = promptForAuthor();
+            Genre genre = promptForGenre();
             String description = getInputString(messageService.get("prompt.new.description"));
-
-            Book book = new Book(newId, title, author, description);
+            Book book = new Book(null, title, author, genre, description);
             bookService.addNewBook(book);
 
-            System.out.println("\n✅  " + messageService.get("info.book.added",
-                    book.getId(), book.getTitle(), book.getAuthor(), book.getDescription()));
+            System.out.println("\n" + messageService.get("info.book.added",
+                    book.getId(), book.getTitle(), book.getAuthor(), book.getGenre(), book.getDescription()));
         } catch (IllegalArgumentException e) {
-            System.err.printf("\n❌  " + messageService.get("error.add.book") + "\n%s\n", e.getMessage());
+            System.err.printf("\n" + messageService.get("error.add.book") + "\n%s\n", e.getMessage());
         }
     }
 
-    private void editBook() throws IOException {
+    private void editBook() {
         int id = getInputInt("\n" + messageService.get("prompt.edit.id"));
         try {
-            List<Book> books = bookService.fetchAllBooks();
-            Book bookToEdit = books.stream()
+            Book bookToEdit = bookService.fetchAllBooks().stream()
                     .filter(b -> b.getId() == id)
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException(messageService.get("error.book.not.found")));
 
-            bookToEdit.setTitle(getInputString(messageService.get("prompt.edit.title")));
-            bookToEdit.setAuthor(getInputString(messageService.get("prompt.edit.author")));
-            bookToEdit.setDescription(getInputString(messageService.get("prompt.edit.description")));
+            System.out.println("\n" + messageService.get("book.details.header"));
+            System.out.println(bookToEdit);
+
+            String title = getInputString(messageService.get("prompt.edit.title"));
+            if (!title.isEmpty()) {
+                bookToEdit.setTitle(title);
+            }
+
+            Author author = promptForAuthor();
+            if (author != null) {
+                bookToEdit.setAuthor(author);
+            }
+
+            Genre genre = promptForGenre();
+            if (genre != null) {
+                bookToEdit.setGenre(genre);
+            }
+
+            String description = getInputString(messageService.get("prompt.edit.description"));
+            if (!description.isEmpty()) {
+                bookToEdit.setDescription(description);
+            }
 
             bookService.modifyBookById(id, bookToEdit);
-            System.out.println("\n✅  " + messageService.get("info.book.updated",
-                    bookToEdit.getId(), bookToEdit.getTitle(), bookToEdit.getAuthor(), bookToEdit.getDescription()));
+            System.out.println("\n" + messageService.get("info.book.updated",
+                    bookToEdit.getId(), bookToEdit.getTitle(), bookToEdit.getAuthor().getName(), bookToEdit.getDescription()));
         } catch (IllegalArgumentException e) {
-            System.err.printf("\n❌  " + messageService.get("error.update.book") + " %d\n%s\n", id, e.getMessage());
+            System.err.printf("\n" + messageService.get("error.update.book") + " %d\n%s\n", id, e.getMessage());
         }
     }
 
-    private void deleteBook() throws IOException {
+    private void deleteBook() {
         int id = getInputInt("\n" + messageService.get("prompt.delete.id"));
         try {
             Book deletedBook = bookService.fetchAllBooks().stream()
@@ -111,11 +146,45 @@ public class LibraryUI {
                     .orElseThrow(() -> new IllegalArgumentException(messageService.get("error.book.not.found")));
 
             bookService.removeBookById(id);
-            System.out.println("\n✅  " + messageService.get("info.book.deleted",
-                    deletedBook.getId(), deletedBook.getTitle(), deletedBook.getAuthor(), deletedBook.getDescription()));
+            System.out.println("\n" + messageService.get("info.book.deleted",
+                    deletedBook.getId(), deletedBook.getTitle(), deletedBook.getAuthor().getName(), deletedBook.getDescription()));
         } catch (IllegalArgumentException e) {
-            System.err.printf("\n❌  " + messageService.get("error.delete.book") + " %d\n%s\n", id, e.getMessage());
+            System.err.printf("\n" + messageService.get("error.delete.book") + " %d\n%s\n", id, e.getMessage());
         }
+    }
+
+    private void displayAuthors() {
+        List<Author> authors = authorService.findAll();
+        if (authors.isEmpty()) {
+            System.out.println("\n" + messageService.get("info.empty.authors"));
+        } else {
+            System.out.println("\n" + messageService.get("author.list.header"));
+            authors.forEach(author -> System.out.println(author.getId() + ": " + author.getName()));
+        }
+    }
+
+    private void displayGenres() {
+        List<Genre> genres = genreService.findAll();
+        if (genres.isEmpty()) {
+            System.out.println("\n" + messageService.get("info.empty.genres"));
+        } else {
+            System.out.println("\n" + messageService.get("genre.list.header"));
+            genres.forEach(genre -> System.out.println(genre.getId() + ": " + genre.getName()));
+        }
+    }
+
+    private Author promptForAuthor() {
+        displayAuthors();
+        int authorId = getInputInt(messageService.get("prompt.new.author"));
+        return authorService.findById(authorId)
+                .orElseThrow(() -> new IllegalArgumentException(messageService.get("error.invalid.author")));
+    }
+
+    private Genre promptForGenre() {
+        displayGenres();
+        int genreId = getInputInt(messageService.get("prompt.new.genre"));
+        return genreService.findById(genreId)
+                .orElseThrow(() -> new IllegalArgumentException(messageService.get("error.invalid.genre")));
     }
 
     private int getInputInt(String prompt) {
@@ -125,7 +194,7 @@ public class LibraryUI {
             scanner.next();
         }
         int input = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); // consume newline
         return input;
     }
 

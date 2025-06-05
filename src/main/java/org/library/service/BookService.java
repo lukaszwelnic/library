@@ -4,9 +4,7 @@ import org.library.model.Book;
 import org.library.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookService {
@@ -18,37 +16,25 @@ public class BookService {
         this.messageService = messageService;
     }
 
-    public List<Book> fetchAllBooks() throws IOException {
-        return List.copyOf(repository.loadBooks());
+    public List<Book> fetchAllBooks() {
+        return repository.read();
     }
 
-    public void addNewBook(Book book) throws IOException {
-        List<Book> books = repository.loadBooks();
-        boolean bookExists = books.stream().anyMatch(b -> b.getId() == book.getId());
-        if (bookExists) {
-            throw new IllegalArgumentException("❌  " + messageService.get("error.duplicate.id", book.getId()));
-        }
-        books.add(book);
-        repository.saveBooks(books);
+    public void addNewBook(Book book) {
+        repository.create(book);
     }
 
-    public void modifyBookById(int id, Book updatedBook) throws IOException {
-        List<Book> books = repository.loadBooks();
-        Optional<Book> bookOptional = books.stream().filter(b -> b.getId() == id).findFirst();
-
-        if (bookOptional.isEmpty()) {
+    public void modifyBookById(int id, Book updatedBook) {
+        if (repository.findById(id).isEmpty()) {
             throw new IllegalArgumentException("❌  " + messageService.get("error.update.notfound", id));
         }
-        books.replaceAll(book -> book.getId() == id ? updatedBook : book);
-        repository.saveBooks(books);
+        repository.update(id, updatedBook);
     }
 
-    public void removeBookById(int id) throws IOException {
-        List<Book> books = repository.loadBooks();
-        if (books.removeIf(book -> book.getId() == id)) {
-            repository.saveBooks(books);
-        } else {
+    public void removeBookById(int id) {
+        if (repository.findById(id).isEmpty()) {
             throw new IllegalArgumentException("❌  " + messageService.get("error.delete.notfound", id));
         }
+        repository.delete(id);
     }
 }

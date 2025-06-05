@@ -13,6 +13,8 @@ repositories {
 dependencies {
     implementation libs.aspectjweaver
     implementation libs.spring.context
+    implementation libs.spring.jdbc
+    implementation libs.postgresql
     implementation libs.jackson.csv
 
     testImplementation libs.junit.jupiter

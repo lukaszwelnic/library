@@ -1,6 +1,6 @@
 # Library CRUD Console Application
 
-A modular **Library CRUD console application** for managing book data, currently supporting both **CSV file** and **PostgreSQL** storage. The application is designed using **Spring (Context only)** for dependency injection, and includes configurable AOP features like **logging** and **caching**.
+A modular **Library CRUD console application** for managing book data, currently supporting **PostgreSQL** storage. The application is designed using **Spring (Context only)** for dependency injection, and includes configurable AOP features like **logging** and **caching**.
 
 ## Features
 
@@ -8,19 +8,17 @@ A modular **Library CRUD console application** for managing book data, currently
 - **Create New Book**: Add a new book.
 - **Edit Existing Book**: Update details of a book by ID.
 - **Delete Book**: Remove a book by ID.
+- **Command-line Interface**: Simple text-based user interface for interaction.
 - **Persistent Storage Options**:
-  - **CSV**: Read/write to a local CSV file.
-  - **PostgreSQL**: Query a database using Spring JDBC (optional).
+  - **PostgreSQL**: Query a database using Spring JDBC.
 - **Profile-based Configuration**:
-  - Easily switch between CSV or JDBC storage using Spring profiles.
   - Enable or disable logging and caching aspects.
 
 ## Technologies Used
 
 - **Java**: Core programming language.
 - **Spring Context**: Dependency injection and configuration management.
-- **Jackson CSV Mapper**: CSV serialization and deserialization.
-- **Spring JDBC** (optional): For PostgreSQL integration.
+- **Spring JDBC**: For PostgreSQL integration.
 - **AspectJ**: For AOP logging and caching.
 - **Gradle**: Project build and dependency management.
 
@@ -44,24 +42,24 @@ cd library
 Edit `src/main/resources/application.properties` to choose the desired profiles:
 
 ```properties
-# Example
-spring.profiles.active=logging,caching,csv
-# or to use PostgreSQL instead of CSV
+# Example (to disable logging or caching delete "logging/caching"
 spring.profiles.active=logging,caching,jdbc
 ```
 
-### 4. (Optional) Set up PostgreSQL
+### 4. Set up PostgreSQL
 
-* Create a new database.
-* Run the SQL initialization script in `src/main/resources/schema.sql` to create tables.
+* Create a new user, database and grant privileges.
+* Run the SQL initialization scripts in:
+  * `src/main/resources/schema.sql` to create tables.
+  * `src/main/resources/authors_insert.sql` to insert authors.
+  * `src/main/resources/genres_insert.sql` to insert genres.
+  * `src/main/resources/books_insert.sql` to insert books.
 
 ### 5. Run the Application
 
 ```bash
 ./gradlew run
 ```
-
----
 
 ## Usage
 
@@ -77,24 +75,14 @@ Library Menu:
 Enter choice: 
 ```
 
----
+## TODO
 
-## Architecture Overview
-
-### Repository Interface
-
-* `BookRepository`: Common interface for all storage types.
-* `CsvBookRepository`: CSV file implementation.
-* `JdbcBookRepository`: PostgreSQL JDBC implementation.
-
-### AOP Support
-
-* `LoggingAspect`: Logs method calls (enabled with `logging` profile).
-* `CachingAspect`: Caches method results (enabled with `caching` profile).
-
-Use Spring profiles to toggle behavior.
-
----
+* Add CSV support
+* Add exceptions and exception handling
+* Add different messages with tick and x to messageService
+* Check for duplicate authors/genres
+* Validate input
+* Allow user to add/update/delete new Genres and Authors
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
