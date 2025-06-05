@@ -12,25 +12,25 @@ import javax.sql.DataSource;
 @PropertySource("classpath:application.properties")
 public class JdbcConfig {
 
-    @Value("${spring.datasource.driver-class-name}")
-    private String driver;
+    @Value("${db.driver}")
+    private String dbDriver;
 
-    @Value("${spring.datasource.url}")
-    private String url;
+    @Value("${db.url}")
+    private String dbUrl;
 
-    @Value("${spring.datasource.username}")
-    private String username;
+    @Value("${db.username}")
+    private String dbUsername;
 
-    @Value("${spring.datasource.password}")
-    private String password;
+    @Value("${db.password}")
+    private String dbPassword;
 
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName(driver);
-        ds.setUrl(url);
-        ds.setUsername(username);
-        ds.setPassword(password);
+        ds.setDriverClassName(dbDriver);
+        ds.setUrl(dbUrl);
+        ds.setUsername(dbUsername);
+        ds.setPassword(dbPassword);
         return ds;
     }
 

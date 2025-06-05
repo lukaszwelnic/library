@@ -1,10 +1,17 @@
 package org.library.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "authors")
 public class Author {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
 
     public Author() {}
+
     public Author(Integer id, String name) {
         this.id = id;
         this.name = name;
