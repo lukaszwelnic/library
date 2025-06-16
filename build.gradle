@@ -16,6 +16,11 @@ dependencies {
     implementation libs.spring.jdbc
     implementation libs.postgresql
     implementation libs.jackson.csv
+    implementation libs.hibernate.core
+    implementation libs.jakarta.persistence
+    implementation libs.jakarta.transaction
+    implementation libs.spring.orm
+    implementation libs.hikaricp
 
     testImplementation libs.junit.jupiter
 }

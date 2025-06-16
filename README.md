@@ -83,6 +83,9 @@ Enter choice:
 * Check for duplicate authors/genres
 * Validate input
 * Allow user to add/update/delete new Genres and Authors
+* Query using the Criteria API
+* Second-level caching using Ehcache or Caffeine
+* Marking service methods with @Transactional
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

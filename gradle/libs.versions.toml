@@ -5,12 +5,21 @@ jackson = "2.18.2"
 junit = "5.11.4"
 jdbc = "6.2.5"
 postgresql = "42.7.3"
-
+hibernate = "6.6.13.Final"
+jakartap = "3.1.0"
+jakartat = "2.0.1"
+orm = "6.2.7"
+hikaricp = "5.1.0"
 
 [libraries]
 aspectjweaver = { group = "org.aspectj", name = "aspectjweaver", version.ref = "aspectj" }
 spring-context = { group = "org.springframework", name = "spring-context", version.ref = "spring" }
 spring-jdbc = { group = "org.springframework", name = "spring-jdbc", version.ref = "jdbc" }
+spring-orm = { group = "org.springframework", name = "spring-orm", version.ref = "orm" }
 postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "postgresql" }
 jackson-csv = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-csv", version.ref = "jackson" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
+hibernate-core = { group = "org.hibernate.orm", name = "hibernate-core", version.ref = "hibernate" }
+jakarta-persistence = { group = "jakarta.persistence", name = "jakarta.persistence-api", version.ref = "jakartap" }
+jakarta-transaction = { group = "jakarta.transaction", name = "jakarta.transaction-api", version.ref = "jakartat" }
+hikaricp = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikaricp" }
